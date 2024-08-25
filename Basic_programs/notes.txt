@@ -1,0 +1,10 @@
+initaite go program cmd :-
+===========================
+
+
+github.com/rpraveenkumar1203/GOLANG/Basic_programs/<app_Name>
+
+
+go: creating new go.mod: module github.com/rpraveenkumar1203/GOLANG/Basic_programs/helloWorldApp
+go: to add module requirements and sums:
+        go mod tidy
