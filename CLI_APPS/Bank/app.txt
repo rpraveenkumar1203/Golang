@@ -1,0 +1,3 @@
+user have to enter a prompt as number
+deposit withdraw checkbalance exit
+using if else
