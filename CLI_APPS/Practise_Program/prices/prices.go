@@ -16,6 +16,7 @@ type taxwithprice struct {
 func (t *taxwithprice) LoadData() {
 
 	dataFile, err := os.Open("prices.txt")
+
 	if err != nil {
 		fmt.Println(err)
 	}
