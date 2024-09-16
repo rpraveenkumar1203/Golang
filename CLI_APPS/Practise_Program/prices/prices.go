@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
+
+	conversion "example.com/app.go/utils"
 )
 
 type taxwithprice struct {
@@ -34,17 +35,8 @@ func (t *taxwithprice) LoadData() {
 		return
 	}
 
-	prices := make([]float64, len(ScannedData))
+	prices, _ := conversion.StringstoFloat(ScannedData)
 
-	for priceindex, price := range ScannedData {
-		floatPrice, err := strconv.ParseFloat(price, 64)
-
-		if err != nil {
-			fmt.Println(err)
-			dataFile.Close()
-		}
-		prices[priceindex] = floatPrice
-	}
 	t.prices = prices
 
 }
