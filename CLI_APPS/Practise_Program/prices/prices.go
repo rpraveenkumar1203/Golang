@@ -1,11 +1,9 @@
 package prices
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
-	conversion "example.com/app.go/utils"
+	"example.com/app.go/utils"
 )
 
 type taxwithprice struct {
@@ -16,26 +14,17 @@ type taxwithprice struct {
 
 func (t *taxwithprice) LoadData() {
 
-	dataFile, err := os.Open("prices.txt")
+	data, dataerror := utils.Readfile("prices.txt")
 
-	if err != nil {
-		fmt.Println(err)
-	}
-	datascanned := bufio.NewScanner(dataFile)
-
-	var ScannedData []string
-
-	for datascanned.Scan() {
-		ScannedData = append(ScannedData, datascanned.Text())
-	}
-	err = datascanned.Err()
-	if err != nil {
-		fmt.Println(err)
-		dataFile.Close()
-		return
+	if dataerror != nil {
+		fmt.Println(dataerror)
 	}
 
-	prices, _ := conversion.StringstoFloat(ScannedData)
+	prices, conversionerror := utils.StringstoFloat(data)
+
+	if conversionerror != nil {
+		fmt.Println(conversionerror)
+	}
 
 	t.prices = prices
 
