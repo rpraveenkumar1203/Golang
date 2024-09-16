@@ -6,13 +6,13 @@ import (
 	"example.com/app.go/utils"
 )
 
-type taxwithprice struct {
-	prices     []float64
-	taxrate    float64
-	totalprice map[string]float64
+type Taxwithprice struct {
+	Prices     []float64
+	Taxrate    float64
+	Totalprice map[string]string
 }
 
-func (t *taxwithprice) LoadData() {
+func (t *Taxwithprice) LoadData() {
 
 	data, dataerror := utils.Readfile("prices.txt")
 
@@ -26,26 +26,32 @@ func (t *taxwithprice) LoadData() {
 		fmt.Println(conversionerror)
 	}
 
-	t.prices = prices
+	t.Prices = prices
 
 }
 
-func (t taxwithprice) PriceafterTax() {
+func (t *Taxwithprice) PriceafterTax() {
 	t.LoadData()
 
-	priceaftertax := make(map[string]float64)
+	PriceafterTax := make(map[string]string)
 
-	for _, price := range t.prices {
-		priceaftertax[fmt.Sprintf("%.2f", price)] = price * (1 + t.taxrate)
+	for _, price := range t.Prices {
+		taxincludePrice := price * (1 + t.Taxrate)
+		PriceafterTax[fmt.Sprintf("%.2f", price)] = fmt.Sprintf("%.2f", taxincludePrice)
+
 	}
-	fmt.Println(priceaftertax)
+	t.Totalprice = PriceafterTax
+
+	// utils.Readfile(fmt.Sprintf("result_%.0f.json", t.taxrate*100))
+	utils.WriteFile(fmt.Sprintf("result%.0f.json", t.Taxrate*100), t)
 
 }
 
-func TaxwithPrice(taxrate float64) *taxwithprice {
+func TaxwithPrice(taxrate float64) *Taxwithprice {
 
-	return &taxwithprice{
-		prices:  []float64{10, 20, 30},
-		taxrate: taxrate,
+	return &Taxwithprice{
+		Prices:     []float64{},
+		Taxrate:    taxrate,
+		Totalprice: make(map[string]string),
 	}
 }
