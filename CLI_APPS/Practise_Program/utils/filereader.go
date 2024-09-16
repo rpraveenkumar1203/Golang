@@ -21,6 +21,7 @@ func Readfile(path string) ([]string, error) {
 
 	}
 	err = readfile.Err()
+	file.Close()
 
 	if err != nil {
 		return nil, errors.New("reading error")
