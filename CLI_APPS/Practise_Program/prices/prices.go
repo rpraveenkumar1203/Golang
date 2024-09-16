@@ -58,6 +58,7 @@ func (t taxwithprice) PriceafterTax() {
 		priceaftertax[fmt.Sprintf("%.2f", price)] = price * (1 + t.taxrate)
 	}
 	fmt.Println(priceaftertax)
+	fmt.Println(priceaftertax)
 
 }
 
