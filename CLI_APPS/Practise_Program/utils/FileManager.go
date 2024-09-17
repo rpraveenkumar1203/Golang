@@ -7,9 +7,16 @@ import (
 	"os"
 )
 
-func Readfile(path string) ([]string, error) {
+type FileManager struct {
+	InputFilePath  string
+	OutputFilePath string
+}
 
-	file, err := os.Open(path)
+// GETS FILEPATH AS .TXT AND RETURNS VALUES AS SLICE OF STRINGS
+
+func (FM FileManager) Readfile() ([]string, error) {
+
+	file, err := os.Open(FM.InputFilePath)
 	readfile := bufio.NewScanner(file)
 	defer file.Close()
 	if err != nil {
@@ -32,9 +39,11 @@ func Readfile(path string) ([]string, error) {
 
 }
 
-func WriteFile(path string, data any) error {
+// GETS FILE_PATH AND UPDATE THE DATA AS JSON
 
-	createdfile, createfileerr := os.Create(path)
+func (FM FileManager) WriteFile(data any) error {
+
+	createdfile, createfileerr := os.Create(FM.OutputFilePath)
 	if createfileerr != nil {
 		return errors.New("unable to create file ")
 	}
@@ -49,4 +58,12 @@ func WriteFile(path string, data any) error {
 	}
 	return nil
 
+}
+
+func New(inputfile, outpufile string) FileManager {
+
+	return FileManager{
+		InputFilePath:  inputfile,
+		OutputFilePath: outpufile,
+	}
 }

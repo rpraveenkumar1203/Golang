@@ -7,14 +7,15 @@ import (
 )
 
 type Taxwithprice struct {
-	Prices     []float64
-	Taxrate    float64
-	Totalprice map[string]string
+	IoManager  utils.FileManager `json:"-"`
+	Prices     []float64         `json:"Price_rate"`
+	Taxrate    float64           `json:"tax_rate"`
+	Totalprice map[string]string `json:"total_price"`
 }
 
 func (t *Taxwithprice) LoadData() {
 
-	data, dataerror := utils.Readfile("prices.txt")
+	data, dataerror := t.IoManager.Readfile()
 
 	if dataerror != nil {
 		fmt.Println(dataerror)
@@ -42,14 +43,14 @@ func (t *Taxwithprice) PriceafterTax() {
 	}
 	t.Totalprice = PriceafterTax
 
-	// utils.Readfile(fmt.Sprintf("result_%.0f.json", t.taxrate*100))
-	utils.WriteFile(fmt.Sprintf("result%.0f.json", t.Taxrate*100), t)
+	t.IoManager.WriteFile(t)
 
 }
 
-func TaxwithPrice(taxrate float64) *Taxwithprice {
+func TaxwithPrice(FM utils.FileManager, taxrate float64) *Taxwithprice {
 
 	return &Taxwithprice{
+		IoManager:  FM,
 		Prices:     []float64{},
 		Taxrate:    taxrate,
 		Totalprice: make(map[string]string),
