@@ -3,14 +3,15 @@ package prices
 import (
 	"fmt"
 
+	iomanager "example.com/app.go/ioManager"
 	"example.com/app.go/utils"
 )
 
 type Taxwithprice struct {
-	IoManager  utils.FileManager `json:"-"`
-	Prices     []float64         `json:"Price_rate"`
-	Taxrate    float64           `json:"tax_rate"`
-	Totalprice map[string]string `json:"total_price"`
+	IoManager  iomanager.IOmanager `json:"-"`
+	Prices     []float64           `json:"Price_rate"`
+	Taxrate    float64             `json:"tax_rate"`
+	Totalprice map[string]string   `json:"total_price"`
 }
 
 func (t *Taxwithprice) LoadData() {
@@ -47,10 +48,10 @@ func (t *Taxwithprice) PriceafterTax() {
 
 }
 
-func TaxwithPrice(FM utils.FileManager, taxrate float64) *Taxwithprice {
+func TaxwithPrice(IO iomanager.IOmanager, taxrate float64) *Taxwithprice {
 
 	return &Taxwithprice{
-		IoManager:  FM,
+		IoManager:  IO,
 		Prices:     []float64{},
 		Taxrate:    taxrate,
 		Totalprice: make(map[string]string),

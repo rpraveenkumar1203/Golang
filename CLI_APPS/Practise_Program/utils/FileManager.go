@@ -41,7 +41,7 @@ func (FM FileManager) Readfile() ([]string, error) {
 
 // GETS FILE_PATH AND UPDATE THE DATA AS JSON
 
-func (FM FileManager) WriteFile(data any) error {
+func (FM FileManager) WriteFile(data interface{}) error {
 
 	createdfile, createfileerr := os.Create(FM.OutputFilePath)
 	if createfileerr != nil {
