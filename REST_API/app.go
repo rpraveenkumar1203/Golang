@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/models"
@@ -40,6 +41,7 @@ func createEvent(context *gin.Context) {
 
 	event.ID = 1
 	event.UserID = 1
+	event.DateTime = time.Now()
 	event.Save()
 	context.JSON(http.StatusAccepted, gin.H{"message": "Event Created", "event": event})
 
