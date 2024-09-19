@@ -14,7 +14,7 @@ type Taxwithprice struct {
 	Totalprice map[string]string   `json:"total_price"`
 }
 
-func (t *Taxwithprice) LoadData() {
+func (t *Taxwithprice) LoadData() error {
 
 	data, dataerror := t.IoManager.Readfile()
 
@@ -29,11 +29,18 @@ func (t *Taxwithprice) LoadData() {
 	}
 
 	t.Prices = prices
+	return nil
 
 }
 
-func (t *Taxwithprice) PriceafterTax() {
-	t.LoadData()
+func (t *Taxwithprice) PriceafterTax(Cprocess chan bool, Cerror chan error) {
+	err := t.LoadData()
+
+	if err != nil {
+		Cerror <- err
+		return
+
+	}
 
 	PriceafterTax := make(map[string]string)
 
@@ -45,6 +52,7 @@ func (t *Taxwithprice) PriceafterTax() {
 	t.Totalprice = PriceafterTax
 
 	t.IoManager.WriteFile(t)
+	Cprocess <- true
 
 }
 
