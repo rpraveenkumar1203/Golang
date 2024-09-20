@@ -14,7 +14,7 @@ func InitDB() {
 
 	var err error
 
-	DB, err := sql.Open("sqlite3", "api.db")
+	DB, err = sql.Open("sqlite3", "api.db")
 
 	if err != nil {
 		panic("cannot initniate connection to database")
@@ -22,6 +22,8 @@ func InitDB() {
 
 	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
+
+	CreateTable()
 
 }
 
