@@ -5,11 +5,14 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/db"
 	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/models"
 )
 
 func main() {
 	//initialiae get post and satart serbvert\
+
+	db.InitDB()
 	gin.SetMode(gin.ReleaseMode)
 
 	server := gin.Default()
@@ -22,7 +25,11 @@ func main() {
 
 func getEvents(context *gin.Context) {
 
-	events := models.GetAllEvents()
+	events, err := models.GetAllEvents()
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"message": "Could fetch events"})
+	}
 	context.JSON(http.StatusOK, events)
 
 }
