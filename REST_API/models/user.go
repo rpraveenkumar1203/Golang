@@ -1,6 +1,9 @@
 package models
 
-import "github.com/rpraveenkumar1203/Golang/tree/main/REST_API/db"
+import (
+	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/db"
+	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/utils"
+)
 
 type Userdata struct {
 	ID       int64
@@ -18,7 +21,13 @@ func (u *Userdata) Save() error {
 		return err
 	}
 
-	result, err := stmt.Exec(u.Email, u.Password)
+	hashed_password, err := utils.HashPassword(u.Password)
+
+	if err != nil {
+		return err
+	}
+
+	result, err := stmt.Exec(u.Email, hashed_password)
 
 	if err != nil {
 		return err
