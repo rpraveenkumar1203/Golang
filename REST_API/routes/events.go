@@ -81,7 +81,7 @@ func updateEvent(context *gin.Context) {
 
 	var updateEvent models.Event
 
-	err = context.ShouldBindBodyWithJSON(&updateEvent)
+	err = context.ShouldBindJSON(&updateEvent)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -90,5 +90,44 @@ func updateEvent(context *gin.Context) {
 		})
 		return
 	}
+
+	updateEvent.ID = eventid
+
+	err = updateEvent.UpdateEvent()
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("cannot convert update to %v int ", eventid)})
+		return
+	}
+	context.JSON(http.StatusAccepted, gin.H{"message": "Event Updated"})
+
+}
+
+func deleteEvent(context *gin.Context) {
+
+	eventid, err := strconv.ParseInt(context.Param("id"), 10, 64)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("cannot convert eventid to %v int ", eventid)})
+		return
+
+	}
+
+	event, err := models.GetEventbyID(eventid)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("No data for %v ", eventid)})
+		return
+
+	}
+
+	err = event.DeleteEvent()
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("unable delete eventid %v ", eventid)})
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{"message": fmt.Sprintf(" deleted eventId  %v ", eventid)})
 
 }
