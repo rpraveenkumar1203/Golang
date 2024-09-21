@@ -17,9 +17,7 @@ type Event struct {
 
 // need to store event
 
-var events = []Event{}
-
-func (e Event) Save() error {
+func (e *Event) Save() error {
 
 	insertQuery := `
 	INSERT INTO events (name, description, location, dateTime, user_id)
@@ -39,11 +37,9 @@ func (e Event) Save() error {
 	}
 
 	id, err := result.LastInsertId()
-	e.ID = id
-	if err != nil {
-		return err
 
-	}
+	e.ID = id
+
 	return err
 
 }
@@ -74,4 +70,20 @@ func GetAllEvents() ([]Event, error) {
 	}
 
 	return events, nil
+}
+
+func GetEventbyID(id int64) (*Event, error) {
+
+	query := "SELECT * FROM events WHERE id = ?"
+	row := db.DB.QueryRow(query, id)
+
+	var event Event
+	err := row.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.DateTime, &event.UserID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &event, err
+
 }
