@@ -1,9 +1,9 @@
 POST http://localhost:8080/events
 content-type: application/json
-Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlhbUBleGFtcGxlLmNvbSIsImV4cCI6MTcyNzAwNjg1NiwidXNlcklEIjoxfQ.OhThB7SOuZx6WLicY3BFlXcavG1pbwKVBL2mskV6TDw
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImlhbTEyQGV4YW1wbGUuY29tIiwiZXhwIjoxNzI3MDEwMzY5LCJ1c2VySUQiOjN9.rHGpJoMqZKgJrerZqPGeM8QRsmQyPd8_snen8EpPYpE
 
 {
-  "name": "Test event",
+  "name": "iam 12 Test event",
   "description": "A test event",
   "location": "A test location",
   "dateTime": "2025-01-01T15:30:00.000Z"
