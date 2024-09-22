@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/models"
+	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/utils"
 )
 
 func signUp(context *gin.Context) {
@@ -46,6 +47,13 @@ func login(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "login data not authenticated"})
 		return
 	}
-	context.JSON(http.StatusOK, gin.H{"message": "login data authenticated"})
+
+	token, err := utils.GenerateToken(user.Email, user.ID)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "login data not authenticated"})
+	}
+
+	context.JSON(http.StatusOK, gin.H{"message": "login data authenticated", "token": token})
 
 }
