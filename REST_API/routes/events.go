@@ -73,12 +73,16 @@ func updateEvent(context *gin.Context) {
 
 	}
 
-	_, err = models.GetEventbyID(eventid)
+	event, err := models.GetEventbyID(eventid)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("No data for %v ", eventid)})
 		return
 
+	}
+
+	if event.UserID != context.GetInt64("userID") {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized entry"})
 	}
 
 	var updateEvent models.Event
@@ -121,6 +125,10 @@ func deleteEvent(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("No data for %v ", eventid)})
 		return
 
+	}
+
+	if event.UserID != context.GetInt64("userID") {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized entry"})
 	}
 
 	err = event.DeleteEvent()
