@@ -27,3 +27,25 @@ func signUp(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"message": "user data updated"})
 
 }
+
+func login(context *gin.Context) {
+
+	var user models.Userdata
+
+	err := context.ShouldBindJSON(&user)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "could get given data ", "error": err.Error()})
+		return
+
+	}
+
+	err = user.Validatelogin()
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"message": "login data not authenticated"})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"message": "login data authenticated"})
+
+}

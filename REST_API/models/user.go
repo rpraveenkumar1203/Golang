@@ -1,14 +1,16 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/db"
 	"github.com/rpraveenkumar1203/Golang/tree/main/REST_API/utils"
 )
 
 type Userdata struct {
-	ID       int64
-	Email    string
-	Password string
+	ID       int64  `json:"id"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (u *Userdata) Save() error {
@@ -38,5 +40,30 @@ func (u *Userdata) Save() error {
 	u.ID = id
 
 	return err
+
+}
+
+func (u *Userdata) Validatelogin() error {
+
+	query := "SELECT password FROM users WHERE email = ?"
+
+	row := db.DB.QueryRow(query, u.Email)
+
+	var password string
+
+	err := row.Scan(&password)
+
+	if err != nil {
+		return errors.New("invalid data ")
+	}
+
+	validPassword := utils.CheckHashPassword(u.Password, password)
+
+	if !validPassword {
+
+		return errors.New("invalid data ")
+	}
+
+	return nil
 
 }
