@@ -1,6 +1,6 @@
 POST http://localhost:8080/events
 content-type: application/json
-Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBrcjEyQHBrci5jb20iLCJleHAiOjE3MjcwMTY0NTgsInVzZXJJRCI6MX0.90HKHyn71BixlgKOstyTAxONVt7nwaEKXYtHaAKIulo
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiZXhwIjoxNzI3MDE5OTE3LCJ1c2VySUQiOjF9.02lg_fPSpa96O5QB3U9mAy_ZxbMN_0U-BsB3dOI-0vE
 
 {
   "name": "PKR event need to delete",
