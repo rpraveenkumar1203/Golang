@@ -1,0 +1,129 @@
+install docker
+
+download postgres image
+
+
+docker pull postgres:12-alpine
+
+
+intitalize the app 
+
+COMMANDS 
+
+docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+
+docker ps 
+
+docker images
+
+docker logs postgres
+
+docker exec -it postgres12 psql -U root
+
+
+CONSOLE OUTPUT 
+
+(base) pkr@rpraveenkumar:~$ docker pull postgres:12-alpine
+12-alpine: Pulling from library/postgres
+43c4264eed91: Pull complete 
+e7368e03b632: Pull complete 
+738c839a1612: Pull complete 
+a4a6aafd4b69: Pull complete 
+038cdbd7acd1: Pull complete 
+fb60b7546f99: Pull complete 
+e8698ad92e74: Pull complete 
+3a291eff5ef1: Pull complete 
+4a28cf0127a7: Pull complete 
+e9be2a968901: Pull complete 
+eb78f2fdb93e: Pull complete 
+Digest: sha256:76685db4bc5175623bc5d8fa68d6c9ba548aeccd764158709b781ba3c37b8d44
+Status: Downloaded newer image for postgres:12-alpine
+docker.io/library/postgres:12-alpine
+(base) pkr@rpraveenkumar:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+(base) pkr@rpraveenkumar:~$ docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root POSTGRES_PASSWORD=secret -d postgres:12-alpine
+docker: invalid reference format: repository name (library/POSTGRES_PASSWORD=secret) must be lowercase.
+See 'docker run --help'.
+(base) pkr@rpraveenkumar:~$ docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+7e498a96572f22e4baafb58bcea3d67a0d4c6ce7597a8838cfa84cfcc1ad6d26
+(base) pkr@rpraveenkumar:~$ docker ps
+CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+7e498a96572f   postgres:12-alpine   "docker-entrypoint.s…"   9 seconds ago   Up 8 seconds   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   postgres12
+(base) pkr@rpraveenkumar:~$ docker images
+REPOSITORY    TAG         IMAGE ID       CREATED         SIZE
+postgres      12-alpine   994c5880d673   6 weeks ago     236MB
+hello-world   latest      d2c94e258dcb   17 months ago   13.3kB
+(base) pkr@rpraveenkumar:~$ docker logs postgres12
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "en_US.utf8".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /var/lib/postgresql/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+sh: locale: not found
+2024-09-23 17:12:30.851 UTC [35] WARNING:  no usable system locales were found
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+
+Success. You can now start the database server using:
+initdb: warning: enabling "trust" authentication for local connections
+
+You can change this by editing pg_hba.conf or using the option -A, or
+--auth-local and --auth-host, the next time you run initdb.
+    pg_ctl -D /var/lib/postgresql/data -l logfile start
+
+waiting for server to start....2024-09-23 17:12:31.890 UTC [41] LOG:  starting PostgreSQL 12.20 on x86_64-pc-linux-musl, compiled by gcc (Alpine 13.2.1_git20240309) 13.2.1 20240309, 64-bit
+2024-09-23 17:12:31.891 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2024-09-23 17:12:31.926 UTC [42] LOG:  database system was shut down at 2024-09-23 17:12:31 UTC
+2024-09-23 17:12:31.937 UTC [41] LOG:  database system is ready to accept connections
+ done
+server started
+CREATE DATABASE
+
+
+/usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+
+waiting for server to shut down....2024-09-23 17:12:32.215 UTC [41] LOG:  received fast shutdown request
+2024-09-23 17:12:32.221 UTC [41] LOG:  aborting any active transactions
+2024-09-23 17:12:32.225 UTC [41] LOG:  background worker "logical replication launcher" (PID 48) exited with exit code 1
+2024-09-23 17:12:32.225 UTC [43] LOG:  shutting down
+2024-09-23 17:12:32.277 UTC [41] LOG:  database system is shut down
+ done
+server stopped
+
+PostgreSQL init process complete; ready for start up.
+
+2024-09-23 17:12:32.333 UTC [1] LOG:  starting PostgreSQL 12.20 on x86_64-pc-linux-musl, compiled by gcc (Alpine 13.2.1_git20240309) 13.2.1 20240309, 64-bit
+2024-09-23 17:12:32.333 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+2024-09-23 17:12:32.333 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+2024-09-23 17:12:32.340 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2024-09-23 17:12:32.376 UTC [56] LOG:  database system was shut down at 2024-09-23 17:12:32 UTC
+2024-09-23 17:12:32.386 UTC [1] LOG:  database system is ready to accept connections
+(base) pkr@rpraveenkumar:~$ docker exec -it postgres12 psql -U root
+psql (12.20)
+Type "help" for help.
+
+root=# select now();
+              now              
+-------------------------------
+ 2024-09-23 17:17:02.765667+00
+(1 row)
+
+root=# 
+
+
+
+
+
