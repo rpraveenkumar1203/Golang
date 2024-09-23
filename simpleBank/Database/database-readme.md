@@ -97,4 +97,3 @@ SELECT NOW();
 
 ---
 
-This `README.md` provides a clear guide for downloading, initializing, and accessing PostgreSQL using Docker, along with useful Docker commands for container management.
