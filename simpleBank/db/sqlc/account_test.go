@@ -4,15 +4,16 @@ import (
 	"context"
 	"testing"
 
+	"github.com/rpraveenkumar/Golang/db/utils"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateAccount(t *testing.T) {
 
 	args := CreateAccountParams{
-		Owner:    "pkr",
-		Balance:  1000,
-		Currency: "USD",
+		Owner:    utils.RandomOwner(),
+		Balance:  utils.RandomMoney(),
+		Currency: utils.RandomCurrency(),
 	}
 
 	account, err := testQueries.CreateAccount(context.Background(), args)
