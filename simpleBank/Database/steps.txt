@@ -20,7 +20,6 @@ docker logs postgres
 
 docker exec -it postgres12 psql -U root
 
-
 CONSOLE OUTPUT 
 
 (base) pkr@rpraveenkumar:~$ docker pull postgres:12-alpine
@@ -39,20 +38,27 @@ eb78f2fdb93e: Pull complete
 Digest: sha256:76685db4bc5175623bc5d8fa68d6c9ba548aeccd764158709b781ba3c37b8d44
 Status: Downloaded newer image for postgres:12-alpine
 docker.io/library/postgres:12-alpine
+
 (base) pkr@rpraveenkumar:~$ docker ps
 CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
 (base) pkr@rpraveenkumar:~$ docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root POSTGRES_PASSWORD=secret -d postgres:12-alpine
 docker: invalid reference format: repository name (library/POSTGRES_PASSWORD=secret) must be lowercase.
 See 'docker run --help'.
+
 (base) pkr@rpraveenkumar:~$ docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+
 7e498a96572f22e4baafb58bcea3d67a0d4c6ce7597a8838cfa84cfcc1ad6d26
+
 (base) pkr@rpraveenkumar:~$ docker ps
 CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS         PORTS                                       NAMES
 7e498a96572f   postgres:12-alpine   "docker-entrypoint.s…"   9 seconds ago   Up 8 seconds   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   postgres12
+
 (base) pkr@rpraveenkumar:~$ docker images
 REPOSITORY    TAG         IMAGE ID       CREATED         SIZE
 postgres      12-alpine   994c5880d673   6 weeks ago     236MB
 hello-world   latest      d2c94e258dcb   17 months ago   13.3kB
+
 (base) pkr@rpraveenkumar:~$ docker logs postgres12
 The files belonging to this database system will be owned by user "postgres".
 This user must also own the server process.
@@ -124,6 +130,47 @@ root=# select now();
 root=# 
 
 
+=============================================================
+NEED TO INSTALL GO _MIGRATION
 
+wget https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz
+tar -xvzf migrate.linux-amd64.tar.gz
+sudo mv migrate /usr/local/bin/
+migrate -version
+
+
+(base) pkr@rpraveenkumar:~$ wget https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz
+--2024-10-02 14:59:24--  https://github.com/golang-migrate/migrate/releases/download/v4.15.2/migrate.linux-amd64.tar.gz
+Resolving github.com (github.com)... 20.207.73.82
+Connecting to github.com (github.com)|20.207.73.82|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://objects.githubusercontent.com/github-production-release-asset-2e65be/118105436/0adaab33-6e61-4f87-a70e-0b6d78f6c9b5?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20241002%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241002T092924Z&X-Amz-Expires=300&X-Amz-Signature=bba6929c8c3059ea88b638d9bd9eb870e9e6727d77f0b57b9e101fb09d97a3b7&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dmigrate.linux-amd64.tar.gz&response-content-type=application%2Foctet-stream [following]
+--2024-10-02 14:59:24--  https://objects.githubusercontent.com/github-production-release-asset-2e65be/118105436/0adaab33-6e61-4f87-a70e-0b6d78f6c9b5?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20241002%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241002T092924Z&X-Amz-Expires=300&X-Amz-Signature=bba6929c8c3059ea88b638d9bd9eb870e9e6727d77f0b57b9e101fb09d97a3b7&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dmigrate.linux-amd64.tar.gz&response-content-type=application%2Foctet-stream
+Resolving objects.githubusercontent.com (objects.githubusercontent.com)... 185.199.108.133, 185.199.109.133, 185.199.110.133, ...
+Connecting to objects.githubusercontent.com (objects.githubusercontent.com)|185.199.108.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 10275047 (9.8M) [application/octet-stream]
+Saving to: ‘migrate.linux-amd64.tar.gz’
+
+migrate.linux-amd64.tar.gz                      100%[=====================================================================================================>]   9.80M  3.49MB/s    in 2.8s    
+
+2024-10-02 14:59:29 (3.49 MB/s) - ‘migrate.linux-amd64.tar.gz’ saved [10275047/10275047]
+
+(base) pkr@rpraveenkumar:~$ tar -xvzf migrate.linux-amd64.tar.gz
+sudo mv migrate /usr/local/bin/
+LICENSE
+README.md
+migrate
+(base) pkr@rpraveenkumar:~$ migrate -version
+4.15.2
+(base) pkr@rpraveenkumar:~$ 
+
+===========================================================
+
+
+(base) pkr@rpraveenkumar:/media/pkr/bala/pygodev/Golang/simpleBank$ migrate create -ext sql -dir db/migration/ -seq init-schema
+/media/pkr/bala/pygodev/Golang/simpleBank/db/migration/000001_init-schema.up.sql
+/media/pkr/bala/pygodev/Golang/simpleBank/db/migration/000001_init-schema.down.sql
+(base) pkr@rpraveenkumar:/media/pkr/bala/pygodev/Golang/simpleBank$ 
 
 
