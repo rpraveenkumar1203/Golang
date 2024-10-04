@@ -2,10 +2,13 @@ name: Run unit tests
 
 on:
   push:
-    branches: [ master ]
+    paths:
+      - 'simpleBank/**'
+    branches: [ "main" ]
   pull_request:
-    branches: [ master ]
-
+    paths:
+      - 'simpleBank/**'
+    branches: [ "main" ]
 jobs:
 
   test:
@@ -14,7 +17,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:14-alpine
+        image: postgres:12
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: secret
