@@ -47,8 +47,9 @@ jobs:
         sudo mv migrate.linux-amd64 /usr/bin/migrate
         which migrate
 
-    - name: Run migrations
+    - name: Run Migrations
+      working-directory: simpleBank
       run: make migrateup
-
     - name: Test
+      working-directory: simpleBank
       run: make test
