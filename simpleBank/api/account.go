@@ -2,9 +2,11 @@ package api
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 	db "github.com/rpraveenkumar/Golang/db/sqlc"
 )
 
@@ -29,6 +31,13 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	}
 	account, err := server.store.CreateAccount(ctx, arg)
 	if err != nil {
+		if pqErr, ok := err.(*pq.Error); ok {
+			switch pqErr.Code.Name() {
+			case "unique_violation", "foreign_key_violation":
+				ctx.JSON(http.StatusForbidden, ErrorResponse(err))
+			}
+			log.Println(pqErr.Code.Name())
+		}
 		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 	}
 	ctx.JSON(http.StatusOK, account)
