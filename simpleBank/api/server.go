@@ -32,15 +32,21 @@ func NewServer(config utils.Config, store db.Store) (*Server, error) {
 	}
 
 	server := &Server{config: config, store: store, tokenMaker: tokenMaker}
+
+	server.setupRouters()
+	return server, nil
+
+}
+
+func (server *Server) setupRouters() {
 	router := gin.Default()
 	router.POST("/users", server.createUser)
+	router.POST("/users/login", server.loginUser)
 	router.POST("/accounts", server.createAccount)
 	router.GET("/accounts/:id", server.getAccount)
 	router.GET("/accounts/", server.listAccount)
 	router.POST("/transfers/", server.createTransfer)
-
 	server.router = router
-	return server, nil
 
 }
 func ErrorResponse(err error) gin.H {
