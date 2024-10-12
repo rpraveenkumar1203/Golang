@@ -2,16 +2,17 @@ package api
 
 import (
 	"database/sql"
+	"errors"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
 	db "github.com/rpraveenkumar/Golang/db/sqlc"
+	"github.com/rpraveenkumar/Golang/token"
 )
 
 type createAccountRequest struct {
-	Owner    string `json:"owner" binding:"required"`
 	Currency string `json:"currency" binding:"required,currency"`
 }
 
@@ -24,8 +25,10 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, ErrorResponse(err))
 	}
 
+	authpayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
 	arg := db.CreateAccountParams{
-		Owner:    req.Owner,
+		Owner:    authpayload.Username,
 		Balance:  0,
 		Currency: req.Currency,
 	}
@@ -63,6 +66,13 @@ func (server *Server) getAccount(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusInternalServerError, ErrorResponse(err))
+		return
+	}
+
+	authpayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if account.Owner != authpayload.Username {
+		err := errors.New("account not belong to logged in user")
+		ctx.JSON(http.StatusUnauthorized, ErrorResponse(err))
 		return
 	}
 	ctx.JSON(http.StatusOK, account)
