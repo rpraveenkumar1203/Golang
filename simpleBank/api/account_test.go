@@ -99,7 +99,7 @@ func TestGetAccountAPi(t *testing.T) {
 
 			//start the server
 
-			server := NewServer(store)
+			server := newTestServer(t, store)
 			url := fmt.Sprintf("/accounts/%d", tc.accountID)
 			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)

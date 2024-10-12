@@ -1,24 +1,37 @@
 package api
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	db "github.com/rpraveenkumar/Golang/db/sqlc"
+	"github.com/rpraveenkumar/Golang/db/utils"
+
+	"github.com/rpraveenkumar/Golang/token"
 )
 
 type Server struct {
-	store  db.Store
-	router *gin.Engine
+	config     utils.Config
+	store      db.Store
+	tokenMaker token.Maker
+	router     *gin.Engine
 }
 
-func NewServer(store db.Store) *Server {
+func NewServer(config utils.Config, store db.Store) (*Server, error) {
+
+	tokenMaker, err := token.NewPasetoMaker(config.Token_symmetric_key)
+
+	if err != nil {
+		return nil, fmt.Errorf("cannot create token maker %w", err)
+	}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", ValidCurrency)
 	}
 
-	server := &Server{store: store}
+	server := &Server{config: config, store: store, tokenMaker: tokenMaker}
 	router := gin.Default()
 	router.POST("/users", server.createUser)
 	router.POST("/accounts", server.createAccount)
@@ -27,7 +40,7 @@ func NewServer(store db.Store) *Server {
 	router.POST("/transfers/", server.createTransfer)
 
 	server.router = router
-	return server
+	return server, nil
 
 }
 func ErrorResponse(err error) gin.H {
