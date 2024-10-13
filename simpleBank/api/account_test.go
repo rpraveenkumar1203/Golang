@@ -47,7 +47,32 @@ func TestGetAccountAPi(t *testing.T) {
 				requireBodyMatchAccount(t, recorder.Body, account)
 			},
 		},
-
+		// {
+		// 	name:      "Unauthorized",
+		// 	accountID: account.ID,
+		// 	setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+		// 		addAuthorization(t, request, tokenMaker, authorizationTypeBearer, "unauthorized_user", time.Minute)
+		// 	},
+		// 	buildstubs: func(store *mockdb.MockStore) {
+		// 		store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account.ID)).Times(1).Return(account, nil)
+		// 	},
+		// 	checkresponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+		// 		require.Equal(t, http.StatusUnauthorized, recorder.Code)
+		// 		requireBodyMatchAccount(t, recorder.Body, account)
+		// 	},
+		// },
+		{
+			name:      "Noauthorization",
+			accountID: account.ID,
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+			},
+			buildstubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetAccount(gomock.Any(), gomock.Any()).Times(0)
+			},
+			checkresponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
+			},
+		},
 		{
 			name:      "NotFound",
 			accountID: account.ID,
