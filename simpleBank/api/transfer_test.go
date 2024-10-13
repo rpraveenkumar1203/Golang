@@ -6,12 +6,14 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	mockdb "github.com/rpraveenkumar/Golang/db/mock"
 	db "github.com/rpraveenkumar/Golang/db/sqlc"
 	"github.com/rpraveenkumar/Golang/db/utils"
+	"github.com/rpraveenkumar/Golang/token"
 	"github.com/stretchr/testify/require"
 )
 
@@ -19,9 +21,11 @@ func TestTransferAPI(t *testing.T) {
 
 	amount := int64(100)
 
+	user1, _ := randomUser(t)
+	user2, _ := randomUser(t)
 	// creating testaccounts
-	account1 := RandomAccount()
-	account2 := RandomAccount()
+	account1 := RandomAccount(user1.Username)
+	account2 := RandomAccount(user2.Username)
 	// initialioaze the currency
 	account1.Currency = utils.USD
 	account2.Currency = utils.USD
@@ -30,6 +34,7 @@ func TestTransferAPI(t *testing.T) {
 		name          string
 		body          gin.H
 		buildstore    func(store *mockdb.MockStore)
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		checkResponse func(recorder *httptest.ResponseRecorder)
 	}{
 		{
@@ -39,6 +44,9 @@ func TestTransferAPI(t *testing.T) {
 				"to_account_id":   account2.ID,
 				"amount":          amount,
 				"currency":        utils.USD,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user1.Username, time.Minute)
 			},
 			buildstore: func(store *mockdb.MockStore) {
 				store.EXPECT().GetAccount(gomock.Any(), gomock.Eq(account1.ID)).Times(1).Return(account1, nil)
@@ -77,6 +85,7 @@ func TestTransferAPI(t *testing.T) {
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
+			tc.setupAuth(t, request, server.tokenMaker)
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
 
