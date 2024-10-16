@@ -13,6 +13,9 @@ migrateup:
 migrateup1:
 	migrate -path  db/migration/ --database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" --verbose up 1
 
+awsmigrate1:
+	migrate -path  db/migration/ --database "postgresql://root:2mfPOhsMmu54gCowbY1T@simple-bank.cl82ao6aizwx.ap-south-1.rds.amazonaws.com:5432/simple_bank" --verbose up 1
+
 migratedown:
 	migrate -path  db/migration/ --database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" --verbose down
 
@@ -34,4 +37,4 @@ bank:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/rpraveenkumar/Golang/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc server bank mock 
+.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown migratedown1 sqlc server bank mock awsmigrate1
